@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LetsMeasure15.MainPage">
+
+    <StackLayout>
+        <Label Text="Lets measure 1.5 meter" TextColor="#555555" TextDecorations="Underline"
+               FontAttributes="Bold" HorizontalTextAlignment="Center"
+               FontSize="Title" Padding="0,20,0,0"/>
+        <Label Text="Nearby mobile Bluetooth devices will appear here. You will receive a notification and a vibration if the device comes less than 1.5m closer to you. " TextColor="Black" TextDecorations="None"
+               FontAttributes="None" HorizontalTextAlignment="Center"
+               FontSize="Body" Padding="7"/>
+        <Label x:Name="LbStatus" Text="Status"
+               FontAttributes="None" HorizontalTextAlignment="Center"
+               FontSize="Subtitle" TextColor="Green" Padding="10,5,10,5"/>
+        
+        <ListView x:Name="DevicesListView" HasUnevenRows="true" SelectionMode="None">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid Padding="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Row="0" Grid.Column="0" Text="{Binding NativeDevice}" VerticalOptions="End" />
+                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding NativeDevice.Name}" VerticalOptions="End" />
+                            <Label Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="1" Text="{Binding Rssi}" VerticalOptions="End" />
+                            
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+
+</ContentPage>
