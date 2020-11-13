@@ -4,10 +4,12 @@
              x:Class="LetsMeasure15.MainPage">
 
     <StackLayout>
+        <Image Source="icon.png" Aspect="AspectFit" HeightRequest="150"></Image>
         <Label Text="Lets measure 1.5 meter" TextColor="#555555" TextDecorations="Underline"
                FontAttributes="Bold" HorizontalTextAlignment="Center"
-               FontSize="Title" Padding="0,20,0,0"/>
-        <Label Text="Nearby mobile Bluetooth devices will appear here. You will receive a notification and a vibration if the device comes less than 1.5m closer to you. " TextColor="Black" TextDecorations="None"
+               FontSize="Title" Padding="0,10,0,0"/>
+        <Label Text="Nearby mobile Bluetooth devices will appear here. You will receive a notification and a vibration if the device comes less than 1.5m closer to you. "
+               TextColor="Gray" TextDecorations="None"
                FontAttributes="None" HorizontalTextAlignment="Center"
                FontSize="Body" Padding="7"/>
         <Label x:Name="LbStatus" Text="Status"
@@ -21,6 +23,7 @@
                         <Grid Padding="10">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
@@ -29,9 +32,11 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Label Grid.Row="0" Grid.Column="0" Text="{Binding NativeDevice}" VerticalOptions="End" />
-                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding NativeDevice.Name}" VerticalOptions="End" />
-                            <Label Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="1" Text="{Binding Rssi}" VerticalOptions="End" />
+                            <Label Grid.Row="0" Grid.Column="0" Text="Device" VerticalOptions="End" />
+                            <Label Grid.Row="0" Grid.Column="2" Text="Distance in Meters" VerticalOptions="End" />
+                            <Label Grid.Row="1" Grid.Column="0" Text="{Binding Device.NativeDevice}" VerticalOptions="End" />
+                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding Device.Rssi}" VerticalOptions="End" />
+                            <Label Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="1" Text="{Binding Distance}" VerticalOptions="End" />
                             
                         </Grid>
                     </ViewCell>

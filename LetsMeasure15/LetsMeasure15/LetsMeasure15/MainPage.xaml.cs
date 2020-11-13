@@ -16,14 +16,14 @@ namespace LetsMeasure15
         readonly IBluetoothLE ble;
         readonly IAdapter adapter;
         readonly BluetoothState state;
-        readonly ObservableCollection<IDevice> devices;
+        readonly ObservableCollection<VDevice> devices;
         readonly List<String> DeviceType;
         readonly INotificationManager notificationManager;
         
         public MainPage()
         {
             InitializeComponent();
-            devices = new ObservableCollection<IDevice>();
+            devices = new ObservableCollection<VDevice>();
             ble = CrossBluetoothLE.Current;
             adapter = CrossBluetoothLE.Current.Adapter;
             state = ble.State;
@@ -75,11 +75,12 @@ namespace LetsMeasure15
                     adapter.DeviceDiscovered += (s, a) =>
                     {
                         IDevice device = a.Device;
-                        if (!devices.Contains(device) && !FilterDevices(device))
+                        VDevice vDevice = new VDevice() { Device = device, Distance = 0};
+                        if (!devices.Contains(vDevice) && !FilterDevices(vDevice))
                         {
-                            devices.Add(device);
+                            vDevice.Distance = Math.Round(CalculateDistance(vDevice),2);
+                            devices.Add(vDevice);
                             Console.WriteLine("----------------------------Device Added------------------------------------\n");
-                            CalculateDistance(device);
                         }
                     };
                     
@@ -90,9 +91,8 @@ namespace LetsMeasure15
                         LbStatus.Text = "Scaning..";
                         await adapter.StartScanningForDevicesAsync();                        
                     }
-
                     DevicesListView.ItemsSource = devices;
-                    LbStatus.Text = "Rescaning in 20s";
+                    LbStatus.Text = "Rescaning in 30s";
                 });
 
                 return true; // runs again, or false to stop
@@ -122,14 +122,14 @@ namespace LetsMeasure15
             }
         }
 
-        private bool FilterDevices(IDevice device)
+        private bool FilterDevices(VDevice device)
         {
-            if (String.IsNullOrEmpty(device.Name))
+            if (String.IsNullOrEmpty(device.Device.Name))
                 return false;
 
             foreach (string type in DeviceType)
             {
-                if (device.Name.Contains(type))
+                if (device.Device.Name.Contains(type))
                 {
                     return true;
                 }
@@ -138,19 +138,23 @@ namespace LetsMeasure15
             return false;
         }
 
-        private void CalculateDistance(IDevice device)
+        private double CalculateDistance(VDevice device)
         {
-            device.UpdateRssiAsync();
-            int MeasuredPower = -69;
-            int RSSI = device.Rssi;
+            device.Device.UpdateRssiAsync();
+            int MeasuredPower = -65;
+            int RSSI = device.Device.Rssi;
             int N = 2;
-            double distance = Math.Pow(10, (MeasuredPower - (RSSI)) / (10 * N));
-            Console.WriteLine("----------------------------" + RSSI + ": " + distance + "-----------------------------------\n");
+            double one = MeasuredPower - RSSI;
+            double two = 10 * N;
+            double resutltPartOne = one / two;
+            double distance = Math.Pow(10,resutltPartOne);
             if (distance <= 1.5)
             {
+                Console.WriteLine("--------Alert--------------------#" + RSSI + "#: " + distance + "-----------------------------------\n");
                 SendNotification(device, distance);
                 SendVibrateAlert();
             }
+            return distance;
         }
 
         void ShowNotification(string title, string message)
@@ -164,10 +168,10 @@ namespace LetsMeasure15
             });
         }
 
-        void SendNotification(IDevice device,double distance)
+        void SendNotification(VDevice device,double distance)
         {
-            string title = $"1.5m Alert #{distance} #{device.NativeDevice}";
-            string message = $"You are in a danger zone! \n please keep a 1.5m distance";
+            string title = $"1.5m Alert #{device.Device.NativeDevice}";
+            string message = $"You are in a danger zone! a 1.5m";
             notificationManager.ScheduleNotification(title, message);
         }
     }
