@@ -44,41 +44,43 @@ namespace LetsMeasure15
             notificationManager.NotificationReceived += (sender, eventArgs) =>
             {
                 var evtData = (NotificationEventArgs)eventArgs;
-                ShowNotification(evtData.Title, evtData.Message);
             };
-            LbStatus.Text = "Setup..";
+            LbStatus.Text = "Setup";
         }
 
         private void BluetoothStatusChecker()
         {
             ble.StateChanged += async (s, e) =>
             {
-                if (e.NewState == BluetoothState.Off || e.NewState == BluetoothState.Unavailable || e.NewState == BluetoothState.Unknown)
+                if (e.NewState == BluetoothState.Off || 
+                    e.NewState == BluetoothState.Unavailable ||
+                    e.NewState == BluetoothState.Unknown)
                 {
-                    await DisplayAlert("Bluetooth Status", $"Blutooth is: {e.NewState}", "OK");
+                    await DisplayAlert("Bluetooth Status", 
+                                        $"Blutooth is: {e.NewState}",
+                                        "OK");
                 };
             };
         }
 
         private void CheckForAnyNewDevice()
         {
-            
             Device.StartTimer(new TimeSpan(0, 0, 20), () =>
             {
-                
-                // do something every 10ms
                 Device.BeginInvokeOnMainThread(async () =>
                 {
+                    StatusActivityIndicator.IsRunning = true;
+                    StatusActivityIndicator.IsVisible = true;
                     devices.Clear();
-                    Console.WriteLine("----------------------------devices cleard------------------------------------\n");
                     LbStatus.Text = "devices cleard";
+                    Console.WriteLine("----------------------------devices cleard------------------------------------\n");
                     adapter.DeviceDiscovered += (s, a) =>
                     {
                         IDevice device = a.Device;
                         VDevice vDevice = new VDevice() { Device = device, Distance = 0};
                         if (!devices.Contains(vDevice) && !FilterDevices(vDevice))
                         {
-                            vDevice.Distance = Math.Round(CalculateDistance(vDevice),2);
+                            vDevice.Distance = CalculateDistance(vDevice);
                             devices.Add(vDevice);
                             Console.WriteLine("----------------------------Device Added------------------------------------\n");
                         }
@@ -88,10 +90,12 @@ namespace LetsMeasure15
                     {
                         Console.WriteLine("----------------------------Scan started------------------------------------\n");
                         adapter.ScanMode = ScanMode.LowLatency;
-                        LbStatus.Text = "Scaning..";
+                        LbStatus.Text = "Scaning";
                         await adapter.StartScanningForDevicesAsync();                        
                     }
                     DevicesListView.ItemsSource = devices;
+                    StatusActivityIndicator.IsRunning = false;
+                    StatusActivityIndicator.IsVisible = false;
                     LbStatus.Text = "Rescaning in 30s";
                 });
 
@@ -141,37 +145,27 @@ namespace LetsMeasure15
         private double CalculateDistance(VDevice device)
         {
             device.Device.UpdateRssiAsync();
-            int MeasuredPower = -65;
+            double MeasuredPower = -57;
             int RSSI = device.Device.Rssi;
             int N = 2;
             double one = MeasuredPower - RSSI;
             double two = 10 * N;
             double resutltPartOne = one / two;
             double distance = Math.Pow(10,resutltPartOne);
+            distance = Math.Round(distance, 2);
             if (distance <= 1.5)
             {
                 Console.WriteLine("--------Alert--------------------#" + RSSI + "#: " + distance + "-----------------------------------\n");
-                SendNotification(device, distance);
+                SendNotification();
                 SendVibrateAlert();
             }
             return distance;
         }
 
-        void ShowNotification(string title, string message)
+        void SendNotification()
         {
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                var msg = new Label()
-                {
-                    Text = $"Notification Received:\nTitle: {title}\nMessage: {message}"
-                };
-            });
-        }
-
-        void SendNotification(VDevice device,double distance)
-        {
-            string title = $"1.5m Alert #{device.Device.NativeDevice}";
-            string message = $"You are in a danger zone! a 1.5m";
+            string title = $"1.5m Alert";
+            string message = $"You are in a danger zone! Keep a 1.5m";
             notificationManager.ScheduleNotification(title, message);
         }
     }

@@ -1,48 +1,72 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="LetsMeasure15.MainPage">
+             x:Class="LetsMeasure15.MainPage"
+             BackgroundColor="#1a936f">
 
-    <StackLayout>
-        <Image Source="icon.png" Aspect="AspectFit" HeightRequest="150"></Image>
-        <Label Text="Lets measure 1.5 meter" TextColor="#555555" TextDecorations="Underline"
-               FontAttributes="Bold" HorizontalTextAlignment="Center"
-               FontSize="Title" Padding="0,10,0,0"/>
-        <Label Text="Nearby mobile Bluetooth devices will appear here. You will receive a notification and a vibration if the device comes less than 1.5m closer to you. "
-               TextColor="Gray" TextDecorations="None"
-               FontAttributes="None" HorizontalTextAlignment="Center"
-               FontSize="Body" Padding="7"/>
-        <Label x:Name="LbStatus" Text="Status"
-               FontAttributes="None" HorizontalTextAlignment="Center"
-               FontSize="Subtitle" TextColor="Green" Padding="10,5,10,5"/>
-        
-        <ListView x:Name="DevicesListView" HasUnevenRows="true" SelectionMode="None">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <Grid Padding="10">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+    <ScrollView>
+        <StackLayout>
+            <Frame WidthRequest="300" Margin="25,25,25,0"
+               VerticalOptions="Center"
+               HorizontalOptions="Center"
+               HasShadow="True" CornerRadius="30" BackgroundColor="#FFFFFF">
+                <StackLayout>
+                    <Label Text="Lets measure 1.5 meter" TextColor="#555555" TextDecorations="Underline"
+                       FontAttributes="Bold" HorizontalTextAlignment="Center"
+                       FontSize="Title" Padding="0,5,0,0"/>
+                    <Image Source="icon.png" Aspect="AspectFit" HeightRequest="150"></Image>
+                    <Label Text="Nearby mobile Bluetooth devices will appear here. You will receive a notification and a vibration if the device comes less than 1.5m closer to you. "
+                       TextColor="Gray" TextDecorations="None"
+                       FontAttributes="None" HorizontalTextAlignment="Center"
+                       FontSize="Body" Padding="5"/>
+                </StackLayout>
+            </Frame>
+            <Frame WidthRequest="300" HeightRequest="300" Margin="25,25,25,25"
+               VerticalOptions="CenterAndExpand"
+               HorizontalOptions="Center"
+               HasShadow="True" CornerRadius="30" BackgroundColor="#FFFFFF">
+                <StackLayout>
+                    <ActivityIndicator x:Name="StatusActivityIndicator" Color="#228f53" IsRunning="True" IsEnabled="True"></ActivityIndicator>
+                    <Label x:Name="LbStatus"
+                       FontAttributes="None" HorizontalTextAlignment="Center"
+                       FontSize="Subtitle" TextColor="#228f53"/>
+                    <BoxView   VerticalOptions="Center"
+                           HorizontalOptions="Center"
+                           HeightRequest="1"
+                           WidthRequest="200"  
+                           Color="#5b5d68"></BoxView>
+                    <ListView x:Name="DevicesListView" HasUnevenRows="true" SelectionMode="None">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Grid Padding="10">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
 
-                            <Label Grid.Row="0" Grid.Column="0" Text="Device" VerticalOptions="End" />
-                            <Label Grid.Row="0" Grid.Column="2" Text="Distance in Meters" VerticalOptions="End" />
-                            <Label Grid.Row="1" Grid.Column="0" Text="{Binding Device.NativeDevice}" VerticalOptions="End" />
-                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding Device.Rssi}" VerticalOptions="End" />
-                            <Label Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="1" Text="{Binding Distance}" VerticalOptions="End" />
-                            
-                        </Grid>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </StackLayout>
+                                        <Label Grid.Row="0" Grid.Column="0" Text="Device" VerticalOptions="End" />
+                                        <Label Grid.Row="1" Grid.Column="0" Text="{Binding Device.NativeDevice}" VerticalOptions="End" />
+                                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding Device.Rssi}" VerticalOptions="End" />
+                                        <Label Grid.Row="2" Grid.Column="0" Text="Approximate distance in meter" VerticalOptions="End" />
+                                        <Label Grid.Row="3" Grid.Column="0" Text="{Binding Distance}" VerticalOptions="End" />
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackLayout>
+            </Frame>
+
+        </StackLayout>
+    </ScrollView>
 
 </ContentPage>
