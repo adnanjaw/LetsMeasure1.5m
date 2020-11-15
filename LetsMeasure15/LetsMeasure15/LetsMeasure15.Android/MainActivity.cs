@@ -9,12 +9,14 @@ using Android.OS;
 using Android;
 using Android.Content;
 using Xamarin.Forms;
+using Android.Bluetooth;
 
 namespace LetsMeasure15.Droid
 {
-    [Activity(LaunchMode = LaunchMode.SingleTop, Label = "LetsMeasure15", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize )]
+    [Activity(LaunchMode = LaunchMode.SingleTop, Label = "LetsMeasure15", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
+
         private readonly string[] Permissions =
         {
             Manifest.Permission.Bluetooth,
